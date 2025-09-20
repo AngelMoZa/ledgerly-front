@@ -1,0 +1,11 @@
+<button (click)="checkHealth()">Comprobar estado del backend</button>
+
+<div *ngIf="loading">Cargando estado...</div>
+
+<div *ngIf="!loading && status">
+  <p>Estado del backend: <strong>{{ status }}</strong></p>
+</div>
+
+<div *ngIf="error">
+  <p style="color:red">{{ error }}</p>
+</div>
