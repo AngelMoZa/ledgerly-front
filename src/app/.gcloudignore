@@ -1,0 +1,24 @@
+# Ignorar node_modules y build locales
+node_modules/
+dist/
+tmp/
+out-tsc/
+
+# Archivos de test y cobertura
+coverage/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Configuración del IDE
+.vscode/
+.idea/
+*.iml
+
+# Archivos de entorno locales
+src/environments/environment*.ts
+
+# Logs
+npm-debug.log*
+yarn-error.log*
