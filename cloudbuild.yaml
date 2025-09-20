@@ -1,0 +1,24 @@
+steps:
+  # 1. Instalar dependencias
+  - name: node:14
+    entrypoint: npm
+    args: ["ci"]
+
+  # 2. Compilar Angular
+  - name: node:14
+    entrypoint: npm
+    args: ["run", "build", "--", "--configuration=production"]
+
+  # 3. Subir al bucket de Cloud Storage
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        echo "Contenido de dist/ledgerly-front:"
+        ls -l dist/ledgerly-front || echo "⚠️ No se generó la carpeta"
+        echo "Subiendo a bucket..."
+        gsutil -m rsync -r dist/ledgerly-front gs://$_BUCKET_NAME
+
+substitutions:
+  _BUCKET_NAME: "ledgerly-frontend-bucket"   # 👈 cambia por el bucket que creaste
