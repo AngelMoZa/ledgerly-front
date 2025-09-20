@@ -1,24 +1,23 @@
 steps:
-  - name: node:14
-    entrypoint: npm
-    args: ["ci"]
+  # 1. Instalar dependencias
+  - name: 'node:14'
+    entrypoint: 'npm'
+    args: ['install']
 
-  - name: node:14
-    entrypoint: npm
-    args: ["run", "build", "--", "--configuration=production"]
+  # 2. Compilar Angular con baseHref apuntando al bucket
+  - name: 'node:14'
+    entrypoint: 'npm'
+    args: ['run', 'build', '--', '--prod', '--base-href=https://storage.googleapis.com/ledgerly-frontend-bucket/']
 
-  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    entrypoint: bash
+  # 3. Subir el contenido del dist al bucket
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
     args:
       - -c
       - |
-        echo "Contenido de dist/ledgerly-front:"
-        ls -l dist/ledgerly-front || echo "⚠️ No se generó la carpeta"
-        echo "Subiendo a bucket..."
-        gsutil -m rsync -r dist/ledgerly-front gs://$_BUCKET_NAME
-
-substitutions:
-  _BUCKET_NAME: "ledgerly-frontend-bucket"
+        echo "📂 Contenido de dist/ledgerly-front:"
+        ls -lah dist/ledgerly-front || echo "⚠️ No se generó la carpeta"
+        gsutil -m rsync -r dist/ledgerly-front gs://ledgerly-frontend-bucket
 
 options:
   logging: CLOUD_LOGGING_ONLY
